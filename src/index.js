@@ -11,7 +11,10 @@ const match = (arg, factories, name) =>
 const connectInitialProps = (mapStateToProps = null, mapDispatchToProps = null) => (target, name, descriptor) => {
   const originalGetInitialProps = descriptor.value;
 
-  descriptor.value = async ctx => {
+  descriptor.value = async args => {
+    // Support both pages and _app.js
+    const { ctx = args } = args;
+
     const { query, store } = ctx;
     const { dispatch, getState } = store;
     const preliminaryProps = { ...query };
@@ -52,7 +55,7 @@ const connectInitialProps = (mapStateToProps = null, mapDispatchToProps = null) 
 
     return {
       ...preliminaryProps,
-      ...(await originalGetInitialProps(ctx, props))
+      ...(await originalGetInitialProps(args, props))
     };
   };
 
