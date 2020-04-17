@@ -1,0 +1,9 @@
+{
+  "name": "connect-initial-props",
+  "version": "0.1.0",
+  "description": "A decorator for Next.js and React-Redux apps to connect `getInitialProps` to `state` and `dispatch`",
+  "main": "src/index.js",
+  "repository": "git@github.com:webiya/connect-initial-props.git",
+  "author": "Igal Steklov <igal@webiya.co.il>",
+  "license": "MIT"
+}
