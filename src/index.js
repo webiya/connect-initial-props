@@ -1,3 +1,13 @@
+import mapDispatchToPropsFactories from 'react-redux/lib/connect/mapDispatchToProps';
+import mapStateToPropsFactories from 'react-redux/lib/connect/mapStateToProps';
+
+// @see https://github.com/reduxjs/react-redux/blob/0c048f0646/src/connect/connect.js#L25-L38
+const match = (arg, factories, name) =>
+  factories.map(factory => factory(arg)).find(x => x) ||
+  (() => {
+    throw new Error(`Invalid value of type ${typeof arg} for ${name} argument.`);
+  });
+
 const connectInitialProps = (mapStateToProps = null, mapDispatchToProps = null) => (target, name, descriptor) => {
   const originalGetInitialProps = descriptor.value;
 
@@ -6,9 +16,22 @@ const connectInitialProps = (mapStateToProps = null, mapDispatchToProps = null) 
     const { dispatch, getState } = store;
     const preliminaryProps = { ...query };
 
-    const getStateProps = () => (!mapStateToProps ? {} : mapStateToProps(getState(), preliminaryProps));
+    // prettier-ignore
+    const initMapStateToProps = match(
+      mapStateToProps,
+      mapStateToPropsFactories,
+      'mapStateToProps'
+    )(dispatch, {});
 
-    const stateToProps = Object.fromEntries(
+    const initMapDispatchToProps = match(
+      mapDispatchToProps,
+      mapDispatchToPropsFactories,
+      'mapDispatchToProps'
+    )(dispatch);
+
+    const getStateProps = () => initMapStateToProps(getState(), preliminaryProps);
+
+    const stateProps = Object.fromEntries(
       Object.keys(getStateProps()).map(name => [
         name,
         {
@@ -20,19 +43,12 @@ const connectInitialProps = (mapStateToProps = null, mapDispatchToProps = null) 
       ])
     );
 
-    const dispatchToProps =
-      (mapDispatchToProps &&
-        Object.fromEntries(
-          Object.entries(mapDispatchToProps).map(([name, action]) => [name, (...args) => dispatch(action(...args))])
-        )) ||
-      {};
-
     const props = {
       ...preliminaryProps,
-      ...dispatchToProps
+      ...initMapDispatchToProps()
     };
 
-    Object.defineProperties(props, stateToProps);
+    Object.defineProperties(props, stateProps);
 
     return {
       ...preliminaryProps,

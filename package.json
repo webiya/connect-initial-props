@@ -5,5 +5,8 @@
   "main": "src/index.js",
   "repository": "git@github.com:webiya/connect-initial-props.git",
   "author": "Igal Steklov <igal@webiya.co.il>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "react-redux": "^7.2.0"
+  }
 }
