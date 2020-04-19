@@ -1,7 +1,7 @@
 # connect-initial-props
 A decorator for Next.js and React-Redux apps to connect `getInitialProps` to `state` and `dispatch`.
 
-[![npm version](https://badge.fury.io/js/connect-initial-props.svg)](https://badge.fury.io/js/connect-initial-props)
+[![npm version](https://badge.fury.io/js/connect-initial-props.svg)](https://www.npmjs.com/package/connect-initial-props)
 
 ## Why?
 When using `react-redux` on a Next.js project, the static `getInitialProps` method is executed before `react-redux`'s had been able to map `state` and `dispatch` to `props`.
